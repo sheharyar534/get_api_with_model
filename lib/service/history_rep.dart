@@ -20,14 +20,15 @@ class HistoryRepository {
       rideHistory.addAll(historyModelFromJson(data).data);
       return rideHistory;
     } else {
-      return [
-        HistoryDataModel(
-          pickuplocation: "pickup_location",
-          droplocation: "drop_location",
-          distance: 2.5,
-          farePrice: 5.0,
-        )
-      ];
+      return getrideHistory();
+      // return [
+      //   HistoryDataModel(
+      //     pickuplocation: "pickup_location",
+      //     droplocation: "drop_location",
+      //     distance: 2.5,
+      //     farePrice: 5.0,
+      //   )
+      // ];
     }
   }
 }

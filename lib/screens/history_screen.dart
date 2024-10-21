@@ -26,6 +26,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
     getHistory();
   }
 
+  void moveToDetailedPage(index) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => DetailedPage(
+                dropLocation: historyData[index].droplocation,
+                farePrice: historyData[index].farePrice,
+                pickupLocation: historyData[index].pickuplocation,
+                rideDistance: historyData[index].distance)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,53 +53,175 @@ class _HistoryScreenState extends State<HistoryScreen> {
               style: TextStyle(fontSize: 35),
             ),
             SizedBox(
-              height: 650,
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: MediaQuery.of(context).size.height * 0.8,
               child: ListView.builder(
                   itemCount: historyData.length,
                   itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return DetailedPage(
-                            dropLocation: historyData[index].droplocation,
-                            pickupLocation: historyData[index].pickuplocation,
-                            rideDistance: historyData[index].distance,
-                            farePrice: historyData[index].farePrice,
-                          );
-                        }));
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius:const  BorderRadius.all(Radius.circular(10)),
-                            border: Border(
-                                top: index == 0
-                                    ? const BorderSide(color: Colors.black)
-                                    : BorderSide.none,
-                                bottom: const BorderSide(color: Colors.black),
-                                left: const BorderSide(color: Colors.black),
-                                right: const BorderSide(color: Colors.black))),
+                    return Container(
+                      height: MediaQuery.of(context).size.height * 0.09,
+                      margin: const EdgeInsets.symmetric(vertical: 5.0),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          border: Border.all(color: Colors.black26)),
+                      child: GestureDetector(
+                        onTap: () {
+                          historyData[index].status == 'COMPLETED'
+                              ? moveToDetailedPage(index)
+                              : null;
+                        },
                         child: ListTile(
+                          leading: historyData[index].status == 'COMPLETED'
+                              ? CircleAvatar(
+                                  radius: MediaQuery.of(context).size.height *
+                                      0.023,
+                                  backgroundColor: Colors.black12,
+                                  child: CircleAvatar(
+                                      radius:
+                                          MediaQuery.of(context).size.height *
+                                              0.02,
+                                      backgroundColor: Colors.white,
+                                      child: const Icon(
+                                        Icons.check_circle_sharp,
+                                        color: Colors.green,
+                                      )),
+                                )
+                              : CircleAvatar(
+                                  radius: MediaQuery.of(context).size.height *
+                                      0.023,
+                                  backgroundColor: Colors.black12,
+                                  child: CircleAvatar(
+                                      radius:
+                                          MediaQuery.of(context).size.height *
+                                              0.02,
+                                      backgroundColor: Colors.white,
+                                      child: const Icon(
+                                        Icons.cancel,
+                                        color: Colors.red,
+                                      )),
+                                ),
                           title: Text(
-                              historyData[index].pickuplocation.toString()),
-                          subtitle:
-                              Text(historyData[index].droplocation.toString()),
-                          trailing: Column(
-                            children: [
-                              Text(
-                                  "${historyData[index].distance.toString()} km"),
-                              Text(
-                                  " Rs: ${historyData[index].farePrice.toString()}"),
-                            ],
+                            historyData[index].pickuplocation.toString(),
+                            style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Text(
+                              historyData[index].droplocation.toString(),
+                              style: const TextStyle(fontSize: 10)),
+                          trailing: Padding(
+                            padding: const EdgeInsets.only(left: 01),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: historyData[index].status ==
+                                              'COMPLETED'
+                                          ? Colors.green
+                                          : Colors.red,
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(10)),
+                                      border:
+                                          Border.all(color: Colors.black12)),
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.02,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.2,
+                                  child: Text(
+                                    historyData[index].status.toString(),
+                                    style: const TextStyle(
+                                        fontSize: 10, color: Colors.white),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.arrow_forward,
+                                  size: 33,
+                                  color: Colors.black26,
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     );
                   }),
-            ),
+            )
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true, // user may not  tap button!
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                CircleAvatar(
+                  radius: MediaQuery.of(context).size.height * 0.05,
+                  backgroundColor: Colors.red,
+                  child: const Icon(
+                    Icons.clear,
+                    color: Colors.white,
+                    size: 50,
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Text("Oh Error!",
+                    style:
+                        TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                const SizedBox(
+                  width: 250,
+                  child: Text(
+                    "WE cannot show you the detail because this ride was cancelled before it proceed further.",
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.055,
+                  color: Colors.red,
+                  child: const Center(
+                    child: Text(
+                      "Dismiss",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -34,12 +34,14 @@ class HistoryDataModel {
   final String? droplocation;
   final double? distance;
   final double? farePrice;
+  final String? status;
 
   HistoryDataModel(
       {required this.pickuplocation,
       required this.droplocation,
       required this.distance,
-      required this.farePrice});
+      required this.farePrice,
+       required this.status, });
 
   //from json method
   factory HistoryDataModel.fromjson(Map<String, dynamic> json) {
@@ -48,6 +50,7 @@ class HistoryDataModel {
       droplocation: json['drop_location'],
       distance: json['distance'],
       farePrice: json['fare_price'],
+      status: json['status']
     );
   }
   //to jeson
